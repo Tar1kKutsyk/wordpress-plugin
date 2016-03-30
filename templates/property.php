@@ -1,4 +1,4 @@
-﻿<?php get_header(); ?>
+<?php get_header(); ?>
 
     <script type="text/javascript">
         //<![CDATA[
@@ -9,18 +9,17 @@
     </script>
 
     <div id="bg_AllContent">
-        <div style="border-color:#eae9e9; border-bottom-width: 0; border-top-width: 0;border-bottom-style: solid; border-top-style: solid; padding-bottom:20px; padding-top:20px; padding-left:px;padding-right:px;" class="fusion-fullwidth fullwidth-box fusion-fullwidth-1  fusion-parallax-none nonhundred-percent-fullwidth">
+        <div style="border-color:#eae9e9; border-bottom-width: 0px; border-top-width: 0px;border-bottom-style: solid;border-top-style: solid;padding-bottom:20px;padding-top:20px;padding-left:px;padding-right:px;" class="fusion-fullwidth fullwidth-box fusion-fullwidth-1  fusion-parallax-none nonhundred-percent-fullwidth">
             <div id="bg_objectDetailMetaNav">
-                <a class="fusion-button button-flat button-round button-large button-default" href="<?php echo $ji_api_wp_plugin->getIndexUrl() ?>">Zurück
-                    zur Übersicht</a>
-                <a class="fusion-button button-flat button-round button-large button-default" href="<?php echo $ji_api_wp_plugin->getExposeUrl($immobilie->verwaltung_techn->objektnr_intern); ?>">EXPOSÉ</a>
+                <a class="fusion-button button-flat button-round button-large button-default" href="/<?php echo $ji_api_wp_plugin->getIndexUrl() ?>">Zurück zur Übersicht</a>
+                <a class="fusion-button button-flat button-round button-large button-default" href="/<?php echo $ji_api_wp_plugin->getExposeUrl($immobilie->verwaltung_techn->objektnr_intern); ?>">EXPOSÉ</a>
                 <div class="clear"></div>
             </div>
 
             <h2><?php echo $immobilie->freitexte->objekttitel; ?></h2>
 
             <div class="fusion-row">
-                <div style="margin-top:0; margin-bottom:20px;" class="fusion-two-third fusion-layout-column fusion-spacing-yes">
+                <div style="margin-top:0px;margin-bottom:20px;" class="fusion-two-third fusion-layout-column fusion-spacing-yes">
                     <div class="fusion-column-wrapper">
 
                         <?php if ($request_form_error): ?>
@@ -40,8 +39,8 @@
 
                             <h3 class="bg_address">
                                 <?php echo $immobilie->geo->plz; ?>
-                                <?php echo $immobilie->geo->ort; ?><?php if ($immobilie->geo->regionaler_zusatz): ?>
-                                    , <?php echo $immobilie->geo->regionaler_zusatz; ?>
+                                <?php echo $immobilie->geo->ort; ?><?php if ($immobilie->geo->regionaler_zusatz): ?>,
+                                    <?php echo $immobilie->geo->regionaler_zusatz; ?>
                                 <?php endif; ?>
                             </h3>
 
@@ -57,9 +56,9 @@
                                         <?php $i = 0; ?>
                                         <?php foreach ($immobilie->anhaenge->anhang as $anhang): ?>
                                             <?php $i++ ?>
-                                            <?php if ($i == 1) continue; ?>
+                                            <?php if($i==1) continue; ?>
                                             <a href="<?php echo $anhang->daten->pfad; ?>" rel="prettyPhoto[gallery1]" target="_blank">
-                                                <img alt="<?php echo $immobilie->freitexte->objekttitel; ?>" class="bg_smallImageDetail" src="<?php echo $anhang->daten->small; ?>" alt="Immobilie"/>
+                                                <img alt="<?php echo $immobilie->freitexte->objekttitel; ?>" class="bg_smallImageDetail" src="<?php echo $anhang->daten->small; ?>" alt="immobilie"/>
                                             </a>
                                         <?php endforeach; ?>
                                         <div class="clear"></div>
@@ -102,6 +101,7 @@
 
                         <div id="bg_objectDetailInformation" class="JiApiWpSearchBarWidget">
                             <h2>Objektnummer <?php echo $immobilie->verwaltung_techn->objektnr_extern; ?></h2>
+                            
                             <ul>
                                 <li>
                                     <?php if ($immobilie->objektkategorie->objektart->children()->getName()): ?>
@@ -160,69 +160,69 @@
                                     <?php endif; ?>
                                 </li>
                             </ul>
-
-                            <h2>Preisinformation</h2>
-                            <ul>
-                                <?php if (isset($immobilie->objektkategorie->vermarktungsart["KAUF"]) && ($immobilie->objektkategorie->vermarktungsart["KAUF"] == 1 || $immobilie->objektkategorie->vermarktungsart["KAUF"] == "true")): ?>
-                                    <?php if (isset($immobilie->preise->kaufpreis)): ?>
+                            <?php if ((int)$immobilie->verwaltung_objekt->status_id == 5 ): ?>
+                                <h2>Preisinformation</h2>
+                                <ul>
+                                    <?php if (isset($immobilie->objektkategorie->vermarktungsart["KAUF"]) && ($immobilie->objektkategorie->vermarktungsart["KAUF"] == 1 || $immobilie->objektkategorie->vermarktungsart["KAUF"] == "true")): ?>
+                                        <?php if (isset($immobilie->preise->kaufpreis)): ?>
+                                            <li>
+                                                <strong>Kaufpreis:</strong> <?php echo number_format((float)$immobilie->preise->kaufpreis, 2, ',', '.'); ?> &euro;
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php foreach ($immobilie->xpath('.//preise/user_defined_simplefield[@feldname="monatlichekostenbrutto"]') as $monatliche_kosten): ?>
+                                            <li>
+                                                <strong>Monatliche
+                                                    Kosten:</strong> <?php echo number_format((float)$monatliche_kosten, 2, ',', '.'); ?> &euro;
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <?php if (isset($immobilie->preise->kaltmiete) && $immobilie->preise->kaltmiete > 0): ?>
+                                            <li>
+                                                <strong>Gesamtmiete:</strong> <?php echo number_format((float)$immobilie->preise->kaltmiete, 2, ',', '.') ?> &euro;<br/>
+                                                (ohne Heizkosten inkl. USt.)
+                                            </li>
+                                        <?php endif; ?>
+    
+                                        <?php if (isset($immobilie->preise->nettokaltmiete) && $immobilie->preise->nettokaltmiete > 0): ?>
+                                            <li>
+                                                <strong>Miete:</strong> <?php echo number_format((float)$immobilie->preise->nettokaltmiete, 2, ',', '.') ?> &euro;
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (isset($immobilie->preise->nebenkosten)): ?>
+                                            <li>
+                                                <strong>Betriebskosten:</strong> <?php echo number_format((float)$immobilie->preise->nebenkosten, 2, ',', '.'); ?> &euro;
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php foreach ($immobilie->xpath('.//preise/user_defined_anyfield/sonstige_kosten') as $sonstige_kosten): ?>
+                                            <li>
+                                                <strong>Sonstige
+                                                    Kosten:</strong> <?php echo number_format((float)$sonstige_kosten, 2, ',', '.'); ?> &euro;
+                                            </li>
+                                        <?php endforeach; ?>
+                                        <?php foreach ($immobilie->xpath('.//preise/user_defined_anyfield/mwst_gesamt') as $mwst_gesamt): ?>
+                                            <li>
+                                                <strong>USt:</strong> <?php echo number_format((float)$mwst_gesamt, 2, ',', '.'); ?> &euro;
+                                            </li>
+                                        <?php endforeach; ?>
+                                        <?php if (isset($immobilie->preise->warmmiete)): ?>
+                                            <li>
+                                                <strong>Gesamtbelastung:</strong> <?php echo number_format((float)$immobilie->preise->warmmiete, 2, ',', '.'); ?> &euro;
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (isset($immobilie->preise->kaution)): ?>
+                                            <li>
+                                                <strong>Kaution:</strong> <?php echo number_format((float)$immobilie->preise->kaution, 2, ',', '.'); ?> &euro;
+                                            </li>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                    <?php if (isset($immobilie->preise->aussen_courtage)): ?>
                                         <li>
-                                            <strong>Kaufpreis:</strong> <?php echo number_format((float)$immobilie->preise->kaufpreis, 2, ',', '.'); ?> &euro;
+                                            <strong>Provision:</strong> <?php echo $immobilie->preise->aussen_courtage; ?>
                                         </li>
                                     <?php endif; ?>
-                                    <?php foreach ($immobilie->xpath('.//preise/user_defined_simplefield[@feldname="monatlichekostenbrutto"]') as $monatliche_kosten): ?>
-                                        <li>
-                                            <strong>Monatliche
-                                                Kosten:</strong> <?php echo number_format((float)$monatliche_kosten, 2, ',', '.'); ?> &euro;
-                                        </li>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <?php if (isset($immobilie->preise->kaltmiete) && $immobilie->preise->kaltmiete > 0): ?>
-                                        <li>
-                                            <strong>Gesamtmiete:</strong> <?php echo number_format((float)$immobilie->preise->kaltmiete, 2, ',', '.') ?> &euro;<br/>
-                                            (ohne Heizkosten inkl. USt.)
-                                        </li>
-                                    <?php endif; ?>
-
-                                    <?php if (isset($immobilie->preise->nettokaltmiete) && $immobilie->preise->nettokaltmiete > 0): ?>
-                                        <li>
-                                            <strong>Miete:</strong> <?php echo number_format((float)$immobilie->preise->nettokaltmiete, 2, ',', '.') ?> &euro;
-                                        </li>
-                                    <?php endif; ?>
-                                    <?php if (isset($immobilie->preise->nebenkosten)): ?>
-                                        <li>
-                                            <strong>Betriebskosten:</strong> <?php echo number_format((float)$immobilie->preise->nebenkosten, 2, ',', '.'); ?> &euro;
-                                        </li>
-                                    <?php endif; ?>
-                                    <?php foreach ($immobilie->xpath('.//preise/user_defined_anyfield/sonstige_kosten') as $sonstige_kosten): ?>
-                                        <li>
-                                            <strong>Sonstige
-                                                Kosten:</strong> <?php echo number_format((float)$sonstige_kosten, 2, ',', '.'); ?> &euro;
-                                        </li>
-                                    <?php endforeach; ?>
-                                    <?php foreach ($immobilie->xpath('.//preise/user_defined_anyfield/mwst_gesamt') as $mwst_gesamt): ?>
-                                        <li>
-                                            <strong>USt:</strong> <?php echo number_format((float)$mwst_gesamt, 2, ',', '.'); ?> &euro;
-                                        </li>
-                                    <?php endforeach; ?>
-                                    <?php if (isset($immobilie->preise->warmmiete)): ?>
-                                        <li>
-                                            <strong>Gesamtbelastung:</strong> <?php echo number_format((float)$immobilie->preise->warmmiete, 2, ',', '.'); ?> &euro;
-                                        </li>
-                                    <?php endif; ?>
-                                    <?php if (isset($immobilie->preise->kaution)): ?>
-                                        <li>
-                                            <strong>Kaution:</strong> <?php echo number_format((float)$immobilie->preise->kaution, 2, ',', '.'); ?> &euro;
-                                        </li>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <?php if (isset($immobilie->preise->aussen_courtage)): ?>
-                                    <li>
-                                        <strong>Provision:</strong> <?php echo $immobilie->preise->aussen_courtage; ?>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                            <div class="clear"></div>
-
+                                </ul>
+                                <div class="clear"></div>
+                            <?php endif; ?>
                             <h2>Eckdaten</h2>
                             <ul>
                                 <?php if ($immobilie->zustand_angaben->baujahr): ?>
@@ -317,7 +317,7 @@
                                 </div>
                                 <div class="bg_clear"></div>
                             <?php endif; ?>
-
+                            <?php if ((int)$immobilie->verwaltung_objekt->status_id == 5 ): ?>
                             <div class="bg_objectContactPerson">
                                 <h2>Ihr Ansprechpartner</h2>
 
@@ -325,7 +325,8 @@
                                     <?php if ($immobilie->kontaktperson->bild): ?>
                                         <img style="float: left; margin-right: 10px;" src="<?php echo $immobilie->kontaktperson->bild->small; ?>"/>
                                     <?php endif; ?>
-                                    <?php echo $immobilie->kontaktperson->titel . ' ' . $immobilie->kontaktperson->vorname . ' ' . $immobilie->kontaktperson->name; ?>
+                                    <?php //print_r($immobilie->kontaktperson);
+                                    echo $immobilie->kontaktperson->titel . ' ' . $immobilie->kontaktperson->vorname . ' ' . $immobilie->kontaktperson->name. ', ' . $immobilie->kontaktperson->suffix; ?>
                                     <br/>
                                     <a href="mailto:<?php echo $immobilie->kontaktperson->email_direkt; ?>">E-Mail
                                         an <?php echo $immobilie->kontaktperson->vorname . ' ' . $immobilie->kontaktperson->name; ?></a><br/>
@@ -339,28 +340,32 @@
                                         Fax: <?php echo $immobilie->kontaktperson->tel_fax; ?>
                                     <?php endif; ?>
                                 </p>
-                                <div style="clear: both;"></div>
-                                <br/>
-                                <h2>Nehmen Sie Kontakt auf</h2>
-                                <form class="bg_property_request" action="<?php echo $ji_api_wp_plugin->getPropertyUrl($immobilie->verwaltung_techn->objektnr_intern) ?>" method="post">
-                                    <label>Name:</label>
-                                    <input type="text" name="request[name]" value="<?php isset($request_form['name']) and print $request_form['name']; ?>" class="request[name]"/>
-                                    <label>E-Mail:</label>
-                                    <input type="text" name="request[email]" value="<?php isset($request_form['email']) and print $request_form['email']; ?>" class="request[email]"/>
-                                    <label>Nachricht:</label>
-                                    <textarea name="request[text]" class="request[email]"/><?php isset($request_form['text']) and print $request_form['text']; ?></textarea>
-                                    <?php if (function_exists('cptch_display_captcha_custom')): ?>
-                                        <label>Sicherheitsabfrage:</label><br/>
-                                        <input type='hidden' name='cntctfrm_contact_action' value='true'/>
-                                        <?php echo cptch_display_captcha_custom(); ?>
-                                    <?php endif; ?>
-                                    <?php if ($request_form_error): ?>
-                                        <div class="alert alert-danger"><?php echo nl2br($request_form_error); ?></div>
-                                    <?php endif; ?>
-                                    <br><br>
-                                    <input type="submit" class="fusion-button button-flat button-round button-large button-default"/>
-                                </form>
-                            </div>
+                                
+                                
+                                
+                                    <div style="clear: both;"></div>
+                                    <br />
+                                    <h2>Nehmen Sie Kontakt auf</h2>
+                                    <form class="bg_property_request" action="<?php echo $ji_api_wp_plugin->getPropertyUrl($immobilie->verwaltung_techn->objektnr_intern) ?>" method="post">
+                                        <label>Name:</label>
+                                        <input type="text" name="request[name]" value="<?php isset($request_form['name']) and print $request_form['name']; ?>" class="request[name]"/>
+                                        <label>E-Mail:</label>
+                                        <input type="text" name="request[email]" value="<?php isset($request_form['email']) and print $request_form['email']; ?>" class="request[email]"/>
+                                        <label>Nachricht:</label>
+                                        <textarea name="request[text]" class="request[email]"/><?php isset($request_form['text']) and print $request_form['text']; ?></textarea>
+                                        <?php if (function_exists('cptch_display_captcha_custom')): ?>
+                                            <label>Sicherheitsabfrage:</label><br/>
+                                            <input type='hidden' name='cntctfrm_contact_action' value='true'/>
+                                            <?php echo cptch_display_captcha_custom(); ?>
+                                        <?php endif; ?>
+                                        <?php if ($request_form_error): ?>
+                                            <div class="alert alert-danger"><?php echo nl2br($request_form_error); ?></div>
+                                        <?php endif; ?>
+                                        <br><br>
+                                        <input type="submit" value="Anfrage senden" class="fusion-button button-flat button-round button-large button-default"/>
+                                    </form>
+                                
+                            </div><?php endif; ?>
                         </div>
                         <div class="fusion-clearfix"></div>
                     </div>
